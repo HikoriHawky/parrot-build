@@ -51,6 +51,9 @@
       - ca-certificates
       - curl
       - gh
+      - fd-find
+      - ripgrep
+      - emacs
     state: latest
   become: true
   become_method: sudo
