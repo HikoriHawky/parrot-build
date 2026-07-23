@@ -34,11 +34,23 @@
     - { repo: "carlospolop/PEASS-ng",  regex: "winPEASx64.exe", location: "/opt/peas" }
     - { repo: "WithSecureLabs/chainsaw",  regex: "chainsaw_all_", location: "/opt/" }
     # - { repo: "BloodHoundAD/BloodHound", regex: "BloodHound-linux-x64.zip", location: "/opt/" }
-    - { repo: "obsidianmd/obsidian-releases",  regex: "[0-9].AppImage", location: "/opt/obsidian" }
   async: 45
   poll: 0
   become: true
   become_method: sudo
+
+- name: "Downloading github releases for user"
+  shell: "{{ build_dir.path }}/githubdownload.py {{ item.repo }} {{ item.regex }} {{ item.location }} {% if item.filename is defined %}{{ item.filename }}{% endif %}"
+  loop:
+    - { repo: 'zellij-org/zellij', regex: 'zellij-x86_64-unknown-linux-musl.tar.gz', location: '~/.local/bin' }
+    - { repo: 'obsidianmd/obsidian-releases',  regex: '\\.[0-9]+.AppImage', location: '~/.local/bin' }
+  async: 45
+  poll: 0
+
+- name: "Make files executable"
+  ansible.builtin.shell: "chmod +x {{ item }}"
+  loop:
+    - '~/.local/bin/Obsidian*.AppImage'
 
 - name: Remove temporary build directory
   ansible.builtin.file:

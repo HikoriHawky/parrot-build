@@ -157,7 +157,14 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../..'
 
 alias mountvirtfs='sudo mount -t 9p -o trans=virtio virtfs ~/virtfs -oversion=9p2000.L'
-alias mountvirtfs-init='mkdir ~/virtfs && sudo mount -t 9p -o trans=virtio virtfs ~/virtfs -oversion=9p2000.L && cp -r ~/virtfs/.local/share/fonts ~/.local/share/fonts'
+
+function post-setup() {
+    mkdir ~/virtfs
+    sudo mount -t 9p -o trans=virtio virtfs ~/virtfs -oversion=9p2000.L
+    cp -r ~/virtfs/.local/share/fonts ~/.local/share/fonts
+    rm .emacs
+    ~/.config/emacs/bin/doom install
+}
 
 function hex-encode()
 {
