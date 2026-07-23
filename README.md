@@ -3,10 +3,7 @@
 # Instructions
 * Start with Parrot HTB Edition
 * Install Ansible with pipx:
-  * `sudo apt install -y pipx`
-  * `pipx install --include-deps ansible`
-  * `pipx ensurepath` (then open a new shell)
-  * `pipx inject ansible pipx` (the playbook's pipx tasks run via Ansible's own interpreter, which needs the pipx module)
+  * `sudo apt upgrade && sudo apt install -y pipx && pipx install --include-deps ansible && pipx ensurepath && source ~/.bashrc && pipx inject ansible pipx`
 * Clone and enter the repo (git clone)
 * ansible-galaxy install -r requirements.yml
 * Make sure we have a sudo token (sudo whoami) — or run the playbook with `-K`

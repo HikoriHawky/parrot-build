@@ -1,0 +1,13 @@
+---
+- name: Clone Doom Emacs config
+  ansible.builtin.git:
+    repo: https://github.com/HikoriHawky/.doom.d.git
+    dest: ~/.doom.d
+    single_branch: yes
+    version: main
+
+- name: Clone Doom Emacs itself
+  ansible.builtin.git:
+    repo: https://github.com/doomemacs/core.git
+    dest: ~/.config/emacs
+    single_branch: yes
