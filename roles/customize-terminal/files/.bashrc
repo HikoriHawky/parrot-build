@@ -131,6 +131,9 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+# Auto resizing with spice-vdagent does not work with XFCE or MATE, quick hack to manual resize
+alias r='xrandr --output Virtual-1 --auto'
+
 # some more ls aliases
 alias ll='ls -lh'
 alias la='ls -lha'
