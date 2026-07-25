@@ -54,6 +54,7 @@
       - fd-find
       - ripgrep
       - emacs
+      - exploitdb
     state: latest
   become: true
   become_method: sudo
