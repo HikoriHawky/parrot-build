@@ -10,8 +10,8 @@ esac
 
 export PATH=~/.local/bin:/snap/bin:/usr/sandbox/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/share/games:/usr/local/sbin:/usr/sbin:/sbin:$PATH
 
-# Set key repeat rate faster
-xset r rate 200 30
+# Set key repeat rate faster (Change in system settings)
+# xset r rate 200 30
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -84,40 +84,41 @@ fi
 
 unset color_prompt force_color_prompt
 
-# case "$TERM" in
-# xterm*|rxvt*|tmux*)
-#     if [ -n "$(ps -ef | grep 'openvpn [eu|au|us|sg]')" ]; then
-#       VPN=$(ps -ef | grep 'openvpn [eu|au|us|sg]'|tail -1| rev| awk '{print $1}'|rev |sed 's/\..*$//g')
-#     elif [ -n "$(nmcli c show | grep vpn)" ]; then
-#       VPN=$(nmcli c show | grep vpn | grep -E \(eu\|au\|us\|sg\) | awk '{print $1}')
-#     fi
+case "$TERM" in
+xterm*|rxvt*|tmux*)
+    if [ -n "$(ps -ef | grep 'openvpn [eu|au|us|sg]')" ]; then
+      VPN=$(ps -ef | grep 'openvpn [eu|au|us|sg]'|tail -1| rev| awk '{print $1}'|rev |sed 's/\..*$//g')
+    elif [ -n "$(nmcli c show | grep vpn)" ]; then
+      VPN=$(nmcli c show | grep vpn | grep -E \(eu\|au\|us\|sg\) | awk '{print $1}')
+    fi
 
-#     WIFI=$(nmcli c show | grep wifi)
-#     ETHER=$(nmcli c show | grep ethernet | grep -v '\-\-')
-#     IS_VPN_CONNECTED=$(nmcli c show | grep vpn | grep -E \(eu\|au\|us\|sg\) | awk '{print $4}')
+    WIFI=$(nmcli c show | grep wifi)
+    ETHER=$(nmcli c show | grep ethernet | grep -v '\-\-')
+    IS_VPN_CONNECTED=$(nmcli c show | grep vpn | grep -E \(eu\|au\|us\|sg\) | awk '{print $4}')
 
-#     VPN_DEV=$(ip addr | grep tun | grep inet | grep -E "(10\.10|10\.129)" | tr -s ' ' | awk '{print $8}')
-#     WIFI_DEV=$([ -n "$WIFI" ] && echo $WIFI | awk '{print $4}')
-#     ETHER_DEV=$([ -n "$ETHER" ] && echo $ETHER | awk '{print $4}')
+    VPN_DEV=$(ip addr | grep tun | grep inet | grep -E "(10\.10|10\.129)" | tr -s ' ' | awk '{print $8}')
+    WIFI_DEV=$([ -n "$WIFI" ] && echo $WIFI | awk '{print $4}')
+    ETHER_DEV=$([ -n "$ETHER" ] && echo $ETHER | awk '{print $4}')
 
-#     if [ ! -z "$WIFI" ]; then
-#       IP=$(ip -4 -o addr show $WIFI_DEV|awk '{print $4}'|sed 's/\/.*$//g')
-#     else
-#       IP=$(ip -4 -o addr show $ETHER_DEV|awk '{print $4}'|sed 's/\/.*$//g')
-#     fi
+    if [ ! -z "$WIFI" ]; then
+      IP=$(ip -4 -o addr show $WIFI_DEV|awk '{print $4}'|sed 's/\/.*$//g')
+    else
+    # Change arg number depending on how many spaces the connection name has, yeah i know
+      IP=$(ip -4 -o addr show $ETHER_DEV|awk '{print $6}'|sed 's/\/.*$//g')
+    fi
 
-#     if [ ! -z "$VPN" ]; then
-#       if [ -n "$VPN_DEV" ]; then
-#         IP=$(ip -4 -o addr show $VPN_DEV|awk '{print $4}'|sed 's/\/.*$//g')
-#       elif [ "$IS_VPN_CONNECTED" != '--' ]; then
-#         IP=$(ip -4 -o addr show tun0|awk '{print $4}'|sed 's/\/.*$//g')
-#       fi
-#     fi
-#     PS1="\[\033[1;32m\]\342\224\214\342\224\200\$([[ \${IP} == *\"10.\"* ]] && echo \"[\[\033[1;34m\]\${VPN}\[\033[1;32m\]]\342\224\200\033[1;37m\]\[\033[1;32m\]\")[\[\033[1;37m\]\${IP}\[\033[1;32m\]]\342\224\200[\[\033[1;37m\]\u\[\033[01;32m\]@\[\033[01;34m\]\h\[\033[1;32m\]]\342\224\200[\[\033[1;37m\]\w\[\033[1;32m\]]\n\[\033[1;32m\]\342\224\224\342\224\200\342\224\200\342\225\274 [\[\e[01;33m\]★\[\e[01;32m\]]\\$ \[\e[0m\]"
-#     ;;
-# *)
-#     ;;
-# esac
+    if [ ! -z "$VPN" ]; then
+      if [ -n "$VPN_DEV" ]; then
+        IP=$(ip -4 -o addr show $VPN_DEV|awk '{print $4}'|sed 's/\/.*$//g')
+      elif [ "$IS_VPN_CONNECTED" != '--' ]; then
+        IP=$(ip -4 -o addr show tun0|awk '{print $4}'|sed 's/\/.*$//g')
+      fi
+    fi
+    PS1="\[\033[1;32m\]\342\224\214\342\224\200\$([[ \${IP} == *\"10.\"* ]] && echo \"[\[\033[1;34m\]\${VPN}\[\033[1;32m\]]\342\224\200\033[1;37m\]\[\033[1;32m\]\")[\[\033[1;37m\]\${IP}\[\033[1;32m\]]\342\224\200[\[\033[1;37m\]\u\[\033[01;32m\]@\[\033[01;34m\]\h\[\033[1;32m\]]\342\224\200[\[\033[1;37m\]\w\[\033[1;32m\]]\n\[\033[1;32m\]\342\224\224\342\224\200\342\224\200\342\225\274 [\[\e[01;33m\]★\[\e[01;32m\]]\\$ \[\e[0m\]"
+    ;;
+*)
+    ;;
+esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -158,9 +159,12 @@ alias ......='cd ../../../..'
 
 alias mountvirtfs='sudo mount -t 9p -o trans=virtio virtfs ~/virtfs -oversion=9p2000.L'
 
+# Mount host's smb share
+alias mountsmb='sudo mount --mkdir -t cifs //<hostname>/<usershare> ~/virtfs -o username=<username>,password=<password>,iocharset=utf8,uid=1000,gid=1006'
+
 function post-setup() {
     mkdir ~/virtfs
-    sudo mount -t 9p -o trans=virtio virtfs ~/virtfs -oversion=9p2000.L
+    mountsmb
     cp -r ~/virtfs/.local/share/fonts ~/.local/share/fonts
     rm .emacs
     ~/.config/emacs/bin/doom install
