@@ -55,6 +55,7 @@
       - ripgrep
       - emacs
       - exploitdb
+      - ftp
     state: latest
   become: true
   become_method: sudo
